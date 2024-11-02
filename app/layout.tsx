@@ -1,6 +1,17 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+
+import {
+  ClerkProvider,
+  SignInButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+} from "@clerk/nextjs";
+
 import "./globals.css";
+import { Toaster } from "sonner";
+import Link from "next/link";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -24,12 +35,33 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
-      </body>
-    </html>
+    <ClerkProvider dynamic >
+      <html lang="en">
+        <body>
+          <div className="max-w-[1000px] mx-auto ">
+            <div className="flex justify-between p-5 mb-5 ">
+              <div className="">
+                <Link href='/' className="text-cyan-400 font-bold text-lg ">Post Uz</Link>
+              </div>
+
+              <div className="">
+                <SignedOut>
+                  <SignInButton>
+                    <button className="text-cyan-400 rounded-lg py-1 px-3 outline-none hover:outline-cyan-400 outline hover:opacity-90 transition-all duration-300 focus:outline-cyan-400 active:outline-cyan-400 " >Sign In</button>
+                  </SignInButton>
+                </SignedOut>
+                <SignedIn>
+                  <div>
+                    <UserButton showName />
+                  </div>
+                </SignedIn>
+              </div>
+            </div>
+          </div>
+          {children}
+          <Toaster position="top-right" />
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
